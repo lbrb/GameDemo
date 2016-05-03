@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cngame.gamesdklib.IGameInterface;
 import com.cngame.gamesdklib.uniform_interface.IUniformInterface;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -55,12 +56,9 @@ public class SDKPluginManager
         //SDKBilling
         String pluginInterfaceName =
                 "com.gamesdk." + pluginName.toLowerCase() + "." + pluginName + "Interface";
-        Class<?> pluginClass = classLoader.loadClass(pluginInterfaceName);
 
-        Method method = pluginClass.getMethod(
-                "invoke", Context.class, Map.class, IGameInterface.class);
-        method.invoke(pluginClass.newInstance(), context, paramMap, resultListener);
-        
+        IUniformInterface uniformInterface = (IUniformInterface) classLoader.loadClass(pluginInterfaceName).newInstance();
+        uniformInterface.invoke(context, paramMap, resultListener);
     }
 
 }
